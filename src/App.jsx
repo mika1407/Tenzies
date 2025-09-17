@@ -14,14 +14,30 @@ export default function App() {
                 id: nanoid()
             }))
     }
-    
-    const diceElements = dice.map(dieObj => (
-        <Die key={dieObj.id} value={dieObj.value} isHeld={dieObj.isHeld}/>)
-    )
 
-    function rollDice() {
-        setDice(generateAllNewDice())
+   function rollDice() {
+        setDice(oldDice => oldDice.map(die => 
+            die.isHeld ? 
+                die : 
+                { ...die, value: Math.ceil(Math.random() * 6) }
+        ))
     }
+
+    function hold(id) {
+           console.log(id)
+        setDice(oldDice => oldDice.map(die => 
+             die.id === id ? {...die, isHeld: !die.isHeld} : die
+        ))
+    }
+ 
+    const diceElements = dice.map(dieObj => (
+        <Die
+            key={dieObj.id}
+            value={dieObj.value}
+            isHeld={dieObj.isHeld}
+            hold={() => hold(dieObj.id)}
+        />
+    ))
     
     return (
         <main>
